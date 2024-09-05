@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+using namespace std;
+
+// Function to draw row boundary
+void draw_row_boundary(int columns) {
+    cout << endl;
+    for (int i = 0; i < columns; i++) {
+        cout << " -----";
+    }
+    cout << endl;
+}
+
+// Function to count the number of alive neighbors
+int count_alive_neighbors(const vector<vector<int>>& grid, int row, int col, int total_rows, int total_cols) {
+    int count = 0;
+    for (int i = row - 1; i <= row + 1; i++) {
+        for (int j = col - 1; j <= col + 1; j++) {
+            if ((i == row && j == col) || (i < 0 || j < 0) || (i >= total_rows || j >= total_cols)) {
+                continue;
+            }
+            if (grid[i][j] == 1) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+int main() {
+    char playAgain;
+    cout << "Welcome to the Game of Life Simulation!" << endl;
+    do {
+        int rows, cols;
+        cout << "Enter the number of rows: ";
+        cin >> rows;
+        cout << "Enter the number of columns: ";
+        cin >> cols;
+
+        vector<vector<int>> current_grid(rows, vector<int>(cols));
+        vector<vector<int>> next_grid(rows, vector<int>(cols));
+
+        // Initialize grid with random values (live and dead cells)
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                current_grid[i][j] = rand() % 2;
+            }
+        }
+
+        // Print initial grid
+        cout << "Initial Stage:";
+        draw_row_boundary(cols);
+        for (int i = 0; i < rows; i++) {
+            cout << ":";
+            for (int j = 0; j < cols; j++) {
+                cout << "  " << current_grid[i][j] << "  :";
+            }
+            draw_row_boundary(cols);
+        }
+
+        // Calculate next generation based on alive neighbor count
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                int alive_neighbors = count_alive_neighbors(current_grid, i, j, rows, cols);
+                if (current_grid[i][j] == 1 && (alive_neighbors == 2 || alive_neighbors == 3)) {
+                    next_grid[i][j] = 1;
+                } else if (current_grid[i][j] == 0 && alive_neighbors == 3) {
+                    next_grid[i][j] = 1;
+                } else {
+                    next_grid[i][j] = 0;
+                }
+            }
+        }
+
+        // Print next generation
+        cout << "\nNext Generation:";
+        draw_row_boundary(cols);
+        for (int i = 0; i < rows; i++) {
+            cout << ":";
+            for (int j = 0; j < cols; j++) {
+                cout << "  " << next_grid[i][j] << "  :";
+            }
+            draw_row_boundary(cols);
+        }
+
+        cout << "\nWould you like to play again? (y/n): ";
+        cin >> playAgain;
+    } while (playAgain == 'y' || playAgain == 'Y');
+
+    cout << "Thanks for playing! Goodbye!" << endl;
+    return 0;
+}
