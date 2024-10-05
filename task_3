@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+void playGame(int maxTries) {
+    int numberToGuess = rand() % 100 + 1;
+    int guess;
+    int tries = 0;
+
+    while (true) {
+        cout << "Enter your guess (1-100): ";
+        cin >> guess;
+        tries++;
+
+        if (guess == numberToGuess) {
+            cout << "Congratulations! You've guessed the number in " << tries << " tries.\n";
+            break;
+        } else if (guess < numberToGuess) {
+            cout << "Too low! Try again.\n";
+        } else {
+            cout << "Too high! Try again.\n";
+        }
+
+        if (maxTries > 0 && tries >= maxTries) {
+            cout << "Sorry, you've reached the maximum number of tries.\n";
+            break;
+        }
+    }
+}
+
+int main() {
+    srand(time(0));
+    char choice;
+    int maxTries = 0;
+    
+    cout<<"*********** NUMBER GUESSING GAME ***************"<<"\n"<<"\n" ;
+    cout<<"\t"<<"\t"<<"WELCOME TO NUMBER GUESSING GAME!"<<"\n";
+    do {
+        playGame(maxTries);
+
+        cout << "Do you want to make it harder by limiting the number of tries? (y/n): ";
+        cin >> choice;
+
+        if (choice == 'y' || choice == 'Y') {
+            cout << "Enter the maximum number of tries: ";
+            cin >> maxTries;
+        } else {
+            maxTries = 0; // No limit
+        }
+
+        cout << "Do you want to play again? (y/n): ";
+        cin >> choice;
+
+    } while (choice == 'y' || choice == 'Y');
+
+    cout << "Thanks for playing!\n";
+    cout<<""<<endl;
+    return 0;
+}
